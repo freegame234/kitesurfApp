@@ -2,22 +2,21 @@ package com.example.kitesurf.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.kitesurf.domaine.model.Meteo
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import com.example.kitesurf.domaine.model.Competition
 
+class MeteoViewModel : ViewModel() {
 
-class CompetitionViewModel : ViewModel() {
+    private val _meteo = MutableStateFlow<List<Meteo>>(emptyList())
+    val meteo: StateFlow<List<Meteo>> = _meteo
 
-    private val _competitions = MutableStateFlow<List<Competition>>(emptyList())
-    val competitions: StateFlow<List<Competition>> = _competitions
-
-    fun fetchCompetitions() {
+    fun fetchMeteo(start: String? = null, end: String? = null) {
         viewModelScope.launch {
             try {
-                val response = RetrofitInstance.api.getCompetitions()
-                _competitions.value = response
+                val response = RetrofitInstance.api.getMeteo(start, end)
+                _meteo.value = response
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -2,41 +2,51 @@ package com.example.kitesurf.ui.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset // Importez tabIndicatorOffset
+import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.kitesurf.ui.theme.BlueOceanLight // Supposons que vous ayez BlueOceanLight couleur définie dans ui.theme
-import com.example.kitesurf.ui.theme.BlueOceanMedium // Supposons que vous ayez BlueOceanMedium couleur définie dans ui.theme
-import com.example.kitesurf.ui.theme.BlueOceanDark  // Supposons que vous ayez BlueOceanDark couleur définie dans ui.theme
-import com.example.kitesurf.ui.theme.WhiteSand      // Supposons que vous ayez WhiteSand couleur définie dans ui.theme
+import com.example.kitesurf.ui.theme.*
+import com.example.kitesurf.ui.viewmodel.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    navController: NavController
+    navController: NavController,
+    classementViewModel: ClassementViewModel = viewModel(),
+    competitionViewModel: CompetitionViewModel = viewModel(),
+    calendrierViewModel: CalendrierViewModel = viewModel(),
+    meteoViewModel: MeteoViewModel = viewModel()
 ) {
-    // État pour gérer l'onglet sélectionné
     var selectedTabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("Compétitions Actuelles", "Classement", "Calendrier", "Météo", "Localisation")
 
-    // Liste des titres des onglets
-    val tabs = listOf("Compétitions Actuelles", "Résultats Passés", "Calendrier", "Météo", "Localisation")
+    // ⚡ Rafraîchissement automatique toutes les 5 minutes
+    LaunchedEffect(Unit) {
+        while (true) {
+            classementViewModel.fetchClassement(1)
+            competitionViewModel.fetchCompetitions()
+            calendrierViewModel.fetchCalendrier(1)
+            meteoViewModel.fetchMeteo()
+            kotlinx.coroutines.delay(5 * 60 * 1000) // 5 minutes
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("KiteSurf App") },
-                // Couleur de l'AppBar pour le thème océan (supposons que BlueOceanLight est défini)
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = BlueOceanLight,
-                    titleContentColor = Color.Black // Ou une autre couleur pour le texte
+                    titleContentColor = Color.Black
                 )
             )
         }
@@ -45,20 +55,16 @@ fun HomeScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                // Ajout d'un arrière-plan pour le thème océan
-                .background(BlueOceanMedium) // Supposons que BlueOceanMedium est défini
+                .background(BlueOceanMedium)
         ) {
-            // Section des onglets
             TabRow(
                 selectedTabIndex = selectedTabIndex,
-                // Couleur de l'indicateur de l'onglet (supposons que BlueOceanDark est défini)
                 indicator = { tabPositions ->
                     TabRowDefaults.SecondaryIndicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTabIndex]),
-                        color = BlueOceanDark // Couleur de l'indicateur
+                        color = BlueOceanDark
                     )
                 },
-                // Couleur de fond de la rangée d'onglets (supposons que BlueOceanLight est défini)
                 containerColor = BlueOceanLight
             ) {
                 tabs.forEachIndexed { index, title ->
@@ -66,120 +72,129 @@ fun HomeScreen(
                         selected = selectedTabIndex == index,
                         onClick = { selectedTabIndex = index },
                         text = { Text(title) },
-                        // Couleur du contenu de l'onglet (texte)
-                        selectedContentColor = BlueOceanDark, // Couleur pour l'onglet sélectionné
-                        unselectedContentColor = Color.Gray // Couleur pour les onglets non sélectionnés
+                        selectedContentColor = BlueOceanDark,
+                        unselectedContentColor = Color.Gray
                     )
                 }
             }
 
-            // Contenu de l'onglet actuellement sélectionné
             when (selectedTabIndex) {
-                0 -> CurrentCompetitionsScreen() // N'a pas besoin du ViewModel
-                1 -> PastResultsScreen()       // N'a pas besoin du ViewModel
-                2 -> CalendarScreen()         // N'a pas besoin du ViewModel
-                3 -> MeteoScreen()
-                4 -> LocalisationScreen()
+                0 -> CompetitionTab(competitionViewModel)
+                1 -> ClassementTab(classementViewModel)
+                2 -> CalendrierTab(calendrierViewModel)
+                3 -> MeteoTab(meteoViewModel)
+                4 -> LocalisationTab()
             }
 
-            // Votre bouton d'origine (vous pouvez le laisser ou le déplacer)
-            Column(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                // Vous pouvez supprimer le texte affichant les données du ViewModel
-                // Text(text = "Data from ViewModel: ${viewModel.data.value}")
-
-                Button(
-                    onClick = {
-                        val videoId = "pNrdJAyTMZc" // The ID of the YouTube video
-                        navController.navigate("youtube_streaming_screen/$videoId")
-                    },
-                    // ...
-                ) {
+                Button(onClick = {
+                    val videoId = "pNrdJAyTMZc"
+                    navController.navigate("youtube_streaming_screen/$videoId")
+                }) {
                     Text("Streaming", color = WhiteSand)
+                }
+
+                Button(onClick = {
+                    refreshAllData(classementViewModel, competitionViewModel, calendrierViewModel, meteoViewModel)
+                }) {
+                    Text("Rafraîchir", color = WhiteSand)
                 }
             }
         }
     }
 }
 
-// --- Composables pour le contenu des onglets (avec du texte factice) ---
-
 @Composable
-fun CurrentCompetitionsScreen(
-    // Supprimez le paramètre ViewModel si vous ne l'utilisez pas
-    // viewModel: CompetitionViewModel
-) {
-    // Affichez simplement du texte factice pour l'instant
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            "Contenu de l'onglet 'Compétitions Actuelles'",
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
-            "Liste des compétitions à venir...",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(top = 8.dp)
-        )
-        // Vous pouvez ajouter un indicateur de chargement factice si vous voulez
-        // CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
+fun CompetitionTab(viewModel: CompetitionViewModel = viewModel()) {
+    val competitions by viewModel.competitions.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchCompetitions()
+    }
+
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(competitions) { comp ->
+            Text("🏆 ${comp.nom} - ${comp.date} à ${comp.localisation}")
+            Spacer(Modifier.height(8.dp))
+        }
     }
 }
 
 @Composable
-fun PastResultsScreen(
-    // Supprimez le paramètre ViewModel si vous ne l'utilisez pas
-    // viewModel: CompetitionViewModel
-) {
-    // Affichez simplement du texte factice pour l'instant
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text(
-            "Contenu de l'onglet 'Résultats Passés'",
-            style = MaterialTheme.typography.bodyMedium
-        )
-        Text(
-            "Affichage des résultats passés...",
-            style = MaterialTheme.typography.bodySmall,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+fun ClassementTab(viewModel: ClassementViewModel = viewModel()) {
+    val classement by viewModel.classement.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchClassement(1)
+    }
+
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(classement) { rider ->
+            Text("${rider.rank}. ${rider.name} - ${rider.points} pts")
+            Spacer(Modifier.height(6.dp))
+        }
     }
 }
 
 @Composable
-fun CalendarScreen(
-    // Supprimez le paramètre ViewModel si vous ne l'utilisez pas
-    // viewModel: CompetitionViewModel
-) {
-// Affichez simplement du texte factice pour l'
-    Text("Aucune Base de données disponible")
+fun CalendrierTab(viewModel: CalendrierViewModel = viewModel()) {
+    val calendrier by viewModel.calendrier.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchCalendrier(1)
+    }
+
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(calendrier) { event ->
+            Text("${event.date_debut} → ${event.date_fin} à ${event.localisation}")
+            Spacer(Modifier.height(6.dp))
+        }
+    }
 }
 
 @Composable
-fun MeteoScreen(
-) {
-// Affichez simplement du texte factice pour l'
-    Text("Aucune Base de données disponible")
+fun MeteoTab(viewModel: MeteoViewModel = viewModel()) {
+    val meteo by viewModel.meteo.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.fetchMeteo()
+    }
+
+    LazyColumn(modifier = Modifier.padding(16.dp)) {
+        items(meteo) { m ->
+            Text("${m.date} - ${m.temperature}°C - ${m.ventVitesse}km/h ${m.ventDirection} - ${m.condition}")
+            Spacer(Modifier.height(6.dp))
+        }
+    }
 }
 
 @Composable
-fun LocalisationScreen(
-) {
-// Affichez simplement du texte factice pour l'
-    Text("Aucune Base de données disponible")
+fun LocalisationTab() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Localisation des compétitions bientôt disponible !")
+    }
+}
 
+private fun refreshAllData(
+    classementViewModel: ClassementViewModel,
+    competitionViewModel: CompetitionViewModel,
+    calendrierViewModel: CalendrierViewModel,
+    meteoViewModel: MeteoViewModel
+) {
+    classementViewModel.fetchClassement(1)
+    competitionViewModel.fetchCompetitions()
+    calendrierViewModel.fetchCalendrier(1)
+    meteoViewModel.fetchMeteo()
 }
