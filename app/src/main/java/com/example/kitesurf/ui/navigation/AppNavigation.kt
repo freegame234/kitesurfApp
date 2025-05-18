@@ -1,4 +1,4 @@
-package com.example.kitesurf.navigation
+package com.example.kitesurf.ui.navigation
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,10 +40,5 @@ fun AppNavigation() {
                 Text("Erreur : ID de la vidéo YouTube manquant")
             }
         }
-
-        // Si vous avez d'autres écrans, définissez leurs composable ici
-        // composable("autre_ecran") {
-        //    AutreEcran(...)
-        // }
     }
 }

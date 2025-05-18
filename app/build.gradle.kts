@@ -109,4 +109,5 @@ dependencies {
     implementation(libs.androidx.media3.exoplayer) // Utilisez la dernière version stable
     implementation(libs.androidx.media3.ui) // Composants UI pour ExoPlayer
 
+    implementation(libs.logging.interceptor) // Replace with the latest version if needed
 }
