@@ -1,9 +1,10 @@
+import com.example.kitesurf.data.datasource.ApiService
 import com.example.kitesurf.network.UnsafeOkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    private const val BASE_URL = "https://192.168.1.141:5000/"
+    private const val BASE_URL = "https://192.168.1.141:5000"
 
     val api: ApiService by lazy {
         Retrofit.Builder()

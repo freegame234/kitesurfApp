@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.kitesurf.domaine.model.Classement
+import com.example.kitesurf.data.datasource.ApiService
 
 class ClassementViewModel : ViewModel() {
 

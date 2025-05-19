@@ -1,11 +1,14 @@
 package com.example.kitesurf.ui.viewmodel
 
+import RetrofitInstance
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.kitesurf.domaine.model.Kitesurfer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import com.example.kitesurf.data.datasource.ApiService
+
 
 class KitesurferViewModel : ViewModel() {
 

@@ -1,3 +1,5 @@
+package com.example.kitesurf.data.datasource
+
 import com.example.kitesurf.domaine.model.Calendrier
 import com.example.kitesurf.domaine.model.Classement
 import com.example.kitesurf.domaine.model.Competition
@@ -6,6 +8,8 @@ import com.example.kitesurf.domaine.model.Meteo
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import com.example.kitesurf.domaine.model.Video
+
 
 interface ApiService {
 
@@ -26,4 +30,7 @@ interface ApiService {
         @Query("start") start: String? = null,
         @Query("end") end: String? = null
     ): List<Meteo>
+
+    @GET("videos")
+    suspend fun getVideos(): List<Video>
 }

@@ -94,12 +94,10 @@ fun HomeScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(onClick = {
-                    val videoId = "pNrdJAyTMZc"
-                    navController.navigate("youtube_streaming_screen/$videoId")
+                    navController.navigate("video_list_screen")
                 }) {
-                    Text("Streaming", color = WhiteSand)
+                    Text("Vidéos", color = WhiteSand)
                 }
-
                 Button(onClick = {
                     refreshAllData(classementViewModel, competitionViewModel, calendrierViewModel, meteoViewModel)
                 }) {
@@ -171,19 +169,6 @@ fun MeteoTab(viewModel: MeteoViewModel = viewModel()) {
             Text("${m.date} - ${m.temperature}°C - ${m.ventVitesse}km/h ${m.ventDirection} - ${m.condition}")
             Spacer(Modifier.height(6.dp))
         }
-    }
-}
-
-@Composable
-fun LocalisationTab() {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text("Localisation des compétitions bientôt disponible !")
     }
 }
 
