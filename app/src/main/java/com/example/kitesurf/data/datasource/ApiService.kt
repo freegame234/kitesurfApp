@@ -5,6 +5,7 @@ import com.example.kitesurf.domaine.model.Classement
 import com.example.kitesurf.domaine.model.Competition
 import com.example.kitesurf.domaine.model.Kitesurfer
 import com.example.kitesurf.domaine.model.Meteo
+import com.example.kitesurf.domaine.model.Position
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -33,4 +34,9 @@ interface ApiService {
 
     @GET("videos")
     suspend fun getVideos(): List<Video>
+
+
+    @GET("positions")
+    suspend fun getPositions(): List<Position>
+
 }

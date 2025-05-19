@@ -110,4 +110,10 @@ dependencies {
     implementation(libs.androidx.media3.ui) // Composants UI pour ExoPlayer
 
     implementation(libs.logging.interceptor) // Replace with the latest version if needed
+    // Google Maps Compose
+    implementation(libs.maps.compose.v2140)
+
+    // Google Play Services Maps
+    implementation(libs.play.services.maps.v1810)
+
 }

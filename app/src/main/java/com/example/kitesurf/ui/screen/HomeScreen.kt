@@ -83,7 +83,7 @@ fun HomeScreen(
                 1 -> ClassementTab(classementViewModel)
                 2 -> CalendrierTab(calendrierViewModel)
                 3 -> MeteoTab(meteoViewModel)
-                4 -> LocalisationTab()
+                4 -> LocalisationTabScreen()
             }
 
             Row(
