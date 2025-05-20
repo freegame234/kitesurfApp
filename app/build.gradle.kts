@@ -68,10 +68,13 @@ dependencies {
 
     // Hilt (Dependency Injection)
     implementation(libs.androidx.hilt.navigation.compose.v100)
-    implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler.v2562) // Or "com.google.dagger:hilt-android-compiler:HILT_VERSION"
     implementation(libs.androidx.navigation.compose)
     ksp(libs.androidx.room.compiler.v261) // Correct version
+    ksp(libs.hilt.android.compiler.v2562)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)                    // correspond à hilt-android-compiler
+
 
     // Retrofit (Networking)
     implementation(libs.retrofit) // Or "com.squareup.retrofit2:retrofit:RETROFIT_VERSION"
@@ -97,13 +100,11 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core) // Or "androidx.test.espresso:espresso-core:ESPRESSO_VERSION"
     androidTestImplementation(platform(libs.androidx.compose.bom)) // Use BOM for test dependencies too
     androidTestImplementation(libs.androidx.ui.test.junit4) // Compose UI test rules
+    kspAndroidTest(libs.hilt.android.compiler.v2461) // ou autre version valide
 
     // Hilt testing (for instrumented tests)
-    androidTestImplementation(libs.hilt.android.testing) // Or "com.google.dagger:hilt-android-testing:HILT_VERSION"
-    kspAndroidTest(libs.dagger.hilt.android.compiler) // Or "com.google.dagger:hilt-android-compiler:HILT_VERSION"
-
     // Optional: Mocking framework for unit tests
-    testImplementation(libs.mockk) // Or Mockito
+
 
     // Lecture video
     implementation(libs.androidx.media3.exoplayer) // Utilisez la dernière version stable
