@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.kitesurf.ui.theme.*
@@ -22,12 +23,14 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun HomeScreen(
     navController: NavController,
     classementViewModel: ClassementViewModel = viewModel(),
-    competitionViewModel: CompetitionViewModel = viewModel(),
     calendrierViewModel: CalendrierViewModel = viewModel(),
-    meteoViewModel: MeteoViewModel = viewModel()
+    meteoViewModel: MeteoViewModel = viewModel(),
+    competitionViewModel: CompetitionViewModel = viewModel(factory = CompetitionViewModelFactory(LocalContext.current))
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
-    val tabs = listOf("Compétitions Actuelles", "Classement", "Calendrier", "Météo", "Localisation")
+    val tabs = listOf("Compétitions", "Classement", "Calendrier", "Météo", "Localisation")
+    val competitions by competitionViewModel.competitions.collectAsState()
+    val error by competitionViewModel.errorMessage.collectAsState()
 
     // ⚡ Rafraîchissement automatique toutes les 5 minutes
     LaunchedEffect(Unit) {

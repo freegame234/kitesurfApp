@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import android.util.Log
 import com.example.kitesurf.domaine.model.Position
+import com.example.kitesurf.network.RetrofitInstance
 import com.google.android.gms.maps.CameraUpdateFactory
 
 @Composable

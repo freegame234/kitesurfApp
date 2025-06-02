@@ -1,3 +1,5 @@
+package com.example.kitesurf.network
+
 import com.example.kitesurf.data.datasource.ApiService
 import com.example.kitesurf.network.UnsafeOkHttpClient
 import retrofit2.Retrofit

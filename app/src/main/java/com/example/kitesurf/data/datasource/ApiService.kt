@@ -6,10 +6,14 @@ import com.example.kitesurf.domaine.model.Competition
 import com.example.kitesurf.domaine.model.Kitesurfer
 import com.example.kitesurf.domaine.model.Meteo
 import com.example.kitesurf.domaine.model.Position
+import com.example.kitesurf.domaine.model.UserResponse
+import com.example.kitesurf.domaine.model.UserRequest
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
 import com.example.kitesurf.domaine.model.Video
+import retrofit2.http.Body
+import retrofit2.http.POST
 
 
 interface ApiService {
@@ -38,5 +42,11 @@ interface ApiService {
 
     @GET("positions")
     suspend fun getPositions(): List<Position>
+
+    @POST("/register")
+    suspend fun register(@Body request: UserRequest): retrofit2.Response<UserResponse>
+
+    @POST("/login")
+    suspend fun login(@Body request: UserRequest): retrofit2.Response<UserResponse>
 
 }
