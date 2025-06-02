@@ -28,8 +28,4 @@ class MyViewModel @Inject constructor(
         }
     }
 
-    // Add functions to handle business logic
-    fun doSomething() {
-        // ... perform some action
-    }
 }

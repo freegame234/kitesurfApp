@@ -1,33 +1,55 @@
 package com.example.kitesurf
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
+import com.example.kitesurf.ui.navigation.AppNavigation
+import com.example.kitesurf.ui.theme.kitesurfTheme
 import dagger.hilt.android.AndroidEntryPoint
-import com.example.kitesurf.ui.navigation.AppNavigation // Import your navigation composable
-import com.example.kitesurf.ui.theme.kitesurfTheme // Assuming your theme function is named KitesurfTheme
 
-
-@AndroidEntryPoint // Annotate with @AndroidEntryPoint for Hilt integration
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    // ✅ Gère la demande de permission
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            // Permission accordée ✅
+        } else {
+            // Permission refusée ❌
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // ✅ Vérifie et demande la permission
+        checkAndRequestLocationPermission()
+
         setContent {
-            kitesurfTheme { // Apply your app theme
+            kitesurfTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppNavigation() // Our main navigation composable
+                    AppNavigation()
                 }
             }
+        }
+    }
+    private fun checkAndRequestLocationPermission() {
+        val permission = Manifest.permission.ACCESS_FINE_LOCATION
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            locationPermissionLauncher.launch(permission)
         }
     }
 }

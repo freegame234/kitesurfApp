@@ -16,6 +16,10 @@ import androidx.navigation.NavController
 import com.example.kitesurf.ui.theme.*
 import com.example.kitesurf.ui.viewmodel.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.example.kitesurf.domaine.model.WeatherResponse
+import com.example.kitesurf.getLastLocation
+import kotlinx.coroutines.delay
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +28,7 @@ fun HomeScreen(
     navController: NavController,
     classementViewModel: ClassementViewModel = viewModel(),
     calendrierViewModel: CalendrierViewModel = viewModel(),
-    meteoViewModel: MeteoViewModel = viewModel(),
+    meteoViewModel: WeatherViewModel = viewModel(),
     competitionViewModel: CompetitionViewModel = viewModel(factory = CompetitionViewModelFactory(LocalContext.current))
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
@@ -38,8 +42,7 @@ fun HomeScreen(
             classementViewModel.fetchClassement(1)
             competitionViewModel.fetchCompetitions()
             calendrierViewModel.fetchCalendrier(1)
-            meteoViewModel.fetchMeteo()
-            kotlinx.coroutines.delay(5 * 60 * 1000) // 5 minutes
+            delay(10_000L)
         }
     }
 
@@ -85,7 +88,7 @@ fun HomeScreen(
                 0 -> CompetitionTab(competitionViewModel)
                 1 -> ClassementTab(classementViewModel)
                 2 -> CalendrierTab(calendrierViewModel)
-                3 -> MeteoTab(meteoViewModel)
+                3 -> WeatherScreen(meteoViewModel)
                 4 -> LocalisationTabScreen()
             }
 
@@ -160,29 +163,26 @@ fun CalendrierTab(viewModel: CalendrierViewModel = viewModel()) {
 }
 
 @Composable
-fun MeteoTab(viewModel: MeteoViewModel = viewModel()) {
-    val meteo by viewModel.meteo.collectAsState()
+fun WeatherScreen(viewModel: WeatherViewModel) {
+    val context = LocalContext.current
+    val weather by viewModel.weather.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.fetchMeteo()
-    }
-
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(meteo) { m ->
-            Text("${m.date} - ${m.temperature}°C - ${m.ventVitesse}km/h ${m.ventDirection} - ${m.condition}")
-            Spacer(Modifier.height(6.dp))
+        getLastLocation(context) { lat, lon ->
+            viewModel.loadWeather(lat, lon)
         }
     }
+
+    WeatherWidget(weather)
 }
 
 private fun refreshAllData(
     classementViewModel: ClassementViewModel,
     competitionViewModel: CompetitionViewModel,
     calendrierViewModel: CalendrierViewModel,
-    meteoViewModel: MeteoViewModel
+    weatherViewModel: WeatherViewModel
 ) {
     classementViewModel.fetchClassement(1)
     competitionViewModel.fetchCompetitions()
     calendrierViewModel.fetchCalendrier(1)
-    meteoViewModel.fetchMeteo()
 }

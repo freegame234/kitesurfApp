@@ -116,5 +116,8 @@ dependencies {
 
     // Google Play Services Maps
     implementation(libs.play.services.maps.v1810)
+    implementation(libs.coil.compose)
+    implementation(libs.play.services.location)
+
 
 }
