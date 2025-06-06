@@ -110,4 +110,7 @@ dependencies {
     implementation(libs.accompanist.swiperefresh)
     implementation(libs.androidx.material.icons.extended)
 
+    implementation(libs.datastore.preferences)
+
+
 }

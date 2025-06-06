@@ -3,32 +3,32 @@ package com.example.kitesurf.ui.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
 import com.example.kitesurf.R
 import com.example.kitesurf.domaine.model.UserRequest
 import com.example.kitesurf.network.RetrofitInstance
+import com.example.kitesurf.session.saveUserId
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-
 
 @Composable
 fun LoginScreen(navController: NavController) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     Box(
         modifier = Modifier
@@ -36,8 +36,8 @@ fun LoginScreen(navController: NavController) {
             .background(
                 brush = Brush.verticalGradient(
                     colors = listOf(
-                        MaterialTheme.colorScheme.primary, // Bleu foncé
-                        MaterialTheme.colorScheme.secondary // Bleu clair
+                        MaterialTheme.colorScheme.primary,
+                        MaterialTheme.colorScheme.secondary
                     )
                 )
             )
@@ -50,11 +50,11 @@ fun LoginScreen(navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Image(
-                painter = painterResource(id = R.drawable.kitesurf_logo), // Image dans drawable/
+                painter = painterResource(id = R.drawable.kitesurf_logo),
                 contentDescription = "Icône de l'application",
                 modifier = Modifier
                     .size(160.dp)
-                    .padding(top = 40.dp,bottom = 16.dp)
+                    .padding(top = 40.dp, bottom = 16.dp)
             )
 
             Card(
@@ -103,8 +103,9 @@ fun LoginScreen(navController: NavController) {
                                     withContext(Dispatchers.Main) {
                                         if (response.isSuccessful) {
                                             val responseBody = response.body()
-                                            if (responseBody?.message != null) {
+                                            if (responseBody?.message != null && responseBody.user_id != null) {
                                                 message = ""
+                                                saveUserId(context, responseBody.user_id!!)
                                                 navController.navigate("home_screen") {
                                                     popUpTo("login_screen") { inclusive = true }
                                                 }
