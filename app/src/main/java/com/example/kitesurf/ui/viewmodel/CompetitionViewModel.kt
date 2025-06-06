@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import com.example.kitesurf.domaine.model.Competition
 import com.example.kitesurf.network.RetrofitInstance
-import com.example.kitesurf.ui.screen.NotificationHelper
+import com.example.kitesurf.NotificationHelper
 
 
 class CompetitionViewModel(private val context: Context) : ViewModel() {

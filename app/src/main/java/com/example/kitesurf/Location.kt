@@ -13,7 +13,6 @@ fun getLastLocation(context: Context, onLocationReady: (Double, Double) -> Unit)
             context, Manifest.permission.ACCESS_FINE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
     ) {
-        // Permission non accordée
         return
     }
 

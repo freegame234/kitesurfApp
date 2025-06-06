@@ -1,5 +1,6 @@
-package com.example.kitesurf.ui.screen
+package com.example.kitesurf
 
+import android.R
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -28,7 +29,7 @@ object NotificationHelper {
 
     fun sendNotification(context: Context, title: String, message: String) {
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // adapte à ton icône
+            .setSmallIcon(R.drawable.ic_dialog_info) // adapte à ton icône
             .setContentTitle(title)
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)

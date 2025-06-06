@@ -14,9 +14,9 @@ pluginManagement {
     plugins {
         // Declare plugins used in sub-projects, without applying them here
         //noinspection GradlePluginVersion
-        id("com.android.application") version "8.10.0" apply false
+        id("com.android.application") version "8.10.1" apply false
         //noinspection GradlePluginVersion
-        id("com.android.library") version "8.10.0" apply false // If you have library modules
+        id("com.android.library") version "8.10.1" apply false // If you have library modules
         id("org.jetbrains.kotlin.android") version "2.1.20" apply false
         id("org.jetbrains.kotlin.jvm") version "2.1.20" apply false // If you have JVM modules
         id("org.jetbrains.kotlin.plugin.compose") version "2.0.21" apply false // Kotlin Compose plugin

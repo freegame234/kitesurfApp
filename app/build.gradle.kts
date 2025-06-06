@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.ksp)
     id("com.google.dagger.hilt.android")
 }
+
 android {
     namespace = "com.example.kitesurf"
     compileSdk = 35
@@ -28,96 +29,85 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15" // Specify the Compose compiler version
     }
 }
 
 dependencies {
-
-    implementation(libs.androidx.media3.exoplayer.v131) // Utilisez la dernière version stable
-    implementation(libs.androidx.media3.ui.v131) // Composants UI pour ExoPlayer
-    implementation(libs.androidx.media3.common) // Souvent utile
-
-    // Les dépendances pour HTTP sont importantes pour les URLs externes comme YouTube
-    implementation(libs.androidx.media3.datasource.okhttp)
-
-    // Core Android & Kotlin
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose) // For using Compose with Activity
-
-    // Jetpack Compose UI & Material 3
+    // Jetpack Compose & Material 3
     implementation(platform(libs.androidx.compose.bom)) // Import Compose BOM for version management
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     debugImplementation(libs.androidx.ui.tooling)
-    // debugImplementation(libs.androidx.ui.test.manifest) // Often needed for UI tests debug
+
+    // ExoPlayer & Media3
+    implementation(libs.androidx.media3.exoplayer.v131) // ExoPlayer
+    implementation(libs.androidx.media3.ui.v131) // UI for ExoPlayer
+    implementation(libs.androidx.media3.common) // Often useful for handling media
+    implementation(libs.androidx.media3.datasource.okhttp) // HTTP support for external URLs
 
     // Hilt (Dependency Injection)
     implementation(libs.androidx.hilt.navigation.compose.v100)
     ksp(libs.hilt.android.compiler.v2562) // Or "com.google.dagger:hilt-android-compiler:HILT_VERSION"
-    implementation(libs.androidx.navigation.compose)
-    ksp(libs.androidx.room.compiler.v261) // Correct version
-    ksp(libs.hilt.android.compiler.v2562)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)                    // correspond à hilt-android-compiler
-
+    ksp(libs.hilt.compiler)
 
     // Retrofit (Networking)
-    implementation(libs.retrofit) // Or "com.squareup.retrofit2:retrofit:RETROFIT_VERSION"
-    //implementation(libs.converter.gson) // Or "com.squareup.retrofit2:converter-gson:GSON_CONVERTER_VERSION"
-    implementation(libs.converter.gson.v2110) // Correct version
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson.v2110)
 
-    // Coroutines (Asynchronous programming)
-    implementation(libs.kotlinx.coroutines.core) // Or "org.jetbrains.kotlinx:kotlinx-coroutines-core:COROUTINES_VERSION"
-    implementation(libs.kotlinx.coroutines.android) // Or "org.jetbrains.kotlinx:kotlinx-coroutines-android:COROUTINES_VERSION"
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
     // Room (Local Database)
-    implementation(libs.androidx.room.runtime) // Or "androidx.room:room-runtime:ROOM_VERSION"
-    ksp(libs.androidx.room.compiler) // Or "androidx.room:room-compiler:ROOM_VERSION"
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
 
-    // LiveData (if needed, often used withViewModel)
-    implementation(libs.androidx.lifecycle.livedata.ktx) // Or "androidx.lifecycle:lifecycle-livedata-ktx:LIFECYCLE_VERSION"
+    // Lifecycle and LiveData
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
 
     // Testing
-    testImplementation(libs.junit) // Or "junit:junit:JUNIT_VERSION"
-    androidTestImplementation(libs.androidx.junit) // Or "androidx.test.ext:junit:ANDROIDX_JUNIT_VERSION"
-    androidTestImplementation(libs.androidx.espresso.core) // Or "androidx.test.espresso:espresso-core:ESPRESSO_VERSION"
-    androidTestImplementation(platform(libs.androidx.compose.bom)) // Use BOM for test dependencies too
-    androidTestImplementation(libs.androidx.ui.test.junit4) // Compose UI test rules
-    kspAndroidTest(libs.hilt.android.compiler.v2461) // ou autre version valide
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.ui.test.junit4)
+    kspAndroidTest(libs.hilt.android.compiler.v2461)
 
-    // Hilt testing (for instrumented tests)
-    // Optional: Mocking framework for unit tests
-
-
-    // Lecture video
-    implementation(libs.androidx.media3.exoplayer) // Utilisez la dernière version stable
-    implementation(libs.androidx.media3.ui) // Composants UI pour ExoPlayer
-
-    implementation(libs.logging.interceptor) // Replace with the latest version if needed
-    // Google Maps Compose
+    // Google Maps and Location
     implementation(libs.maps.compose.v2140)
-
-    // Google Play Services Maps
     implementation(libs.play.services.maps.v1810)
-    implementation(libs.coil.compose)
-    implementation(libs.play.services.location)
+    implementation(libs.play.services.location.v2101)
 
+    // Coil for image loading
+    implementation(libs.coil.compose)
+
+    // UI and Foundation
+    implementation(libs.ui)
+    implementation(libs.androidx.foundation)
+    implementation(libs.androidx.navigation.compose.v253)
+
+    // Logging Interceptor
+    implementation(libs.logging.interceptor) // Logging for HTTP requests
+
+    implementation(libs.accompanist.swiperefresh)
+    implementation(libs.androidx.material.icons.extended)
 
 }

@@ -2,7 +2,7 @@ package com.example.kitesurf
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
-import com.example.kitesurf.ui.screen.NotificationHelper
+import com.example.kitesurf.NotificationHelper
 
 @HiltAndroidApp
 class KitesurfApplication : Application() {

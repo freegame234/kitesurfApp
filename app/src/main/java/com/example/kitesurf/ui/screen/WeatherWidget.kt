@@ -6,10 +6,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import coil.compose.AsyncImage
 import com.example.kitesurf.domaine.model.WeatherResponse
-import java.util.jar.Manifest
 
 @Composable
 fun WeatherWidget(weather: WeatherResponse?) {
