@@ -128,26 +128,39 @@ fun CompetitionTab(viewModel: CompetitionViewModel = viewModel()) {
         viewModel.fetchCompetitions()
     }
 
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         items(competitions) { comp ->
-            Text("🏆 ${comp.nom} - ${comp.date} à ${comp.localisation}")
-            Spacer(Modifier.height(8.dp))
-        }
-    }
-}
-
-@Composable
-fun ClassementTab(viewModel: ClassementViewModel = viewModel()) {
-    val classement by viewModel.classement.collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchClassement(1)
-    }
-
-    LazyColumn(modifier = Modifier.padding(16.dp)) {
-        items(classement) { rider ->
-            Text("${rider.rank}. ${rider.name} - ${rider.points} pts")
-            Spacer(Modifier.height(6.dp))
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    Text(
+                        text = comp.nom,
+                        style = MaterialTheme.typography.titleLarge,
+                        color = BlueOceanDark
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = comp.date,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "📍 ${comp.localisation}",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                }
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.kitesurf.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,10 +18,11 @@ class ClassementViewModel : ViewModel() {
     fun fetchClassement(competitionId: Int) {
         viewModelScope.launch {
             try {
+                Log.d("ClassementViewModel", "Chargement classement pour compétition ID: $competitionId")
                 val response = RetrofitInstance.api.getClassement(competitionId)
                 _classement.value = response
             } catch (e: Exception) {
-                e.printStackTrace()
+                Log.e("ClassementViewModel", "Erreur chargement classement", e)
             }
         }
     }

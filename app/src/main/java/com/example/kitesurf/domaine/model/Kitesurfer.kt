@@ -6,4 +6,3 @@ data class Kitesurfer(
     val prenom: String,
     val nationalite: String
 )
-
