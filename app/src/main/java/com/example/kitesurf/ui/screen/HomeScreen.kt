@@ -7,10 +7,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.filled.Camera
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Stream
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -26,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.kitesurf.getLastLocation
 import com.example.kitesurf.session.clearSession
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -45,11 +48,20 @@ fun HomeScreen(
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        while (true) {
+            getLastLocation(context) { lat, lon ->
+                meteoViewModel.loadWeather(lat, lon)
+            }
+            delay(5000) // toutes les 5 secondes
+        }
+    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = drawerState.isOpen,
         drawerContent = {
             ModalDrawerSheet(
                 drawerContainerColor = BlueOceanLight,
@@ -78,9 +90,32 @@ fun HomeScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Éléments du menu
-                DrawerItem(icon = Icons.Default.Person, label = "Profil")
-                DrawerItem(icon = Icons.Default.Settings, label = "Paramètres")
+                DrawerItem(
+                    icon = Icons.Default.Camera,
+                    label = "Vidéos",
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                            navController.navigate("video_list_screen") {
+                                popUpTo("home_screen") { inclusive = false }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                )
+                DrawerItem(
+                    icon = Icons.Default.Stream,
+                    label = "Streaming",
+                    onClick = {
+                        scope.launch {
+                            drawerState.close()
+                            navController.navigate("streaming_screen") {
+                                popUpTo("home_screen") { inclusive = false }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                )
                 DrawerItem(
                     icon = Icons.Default.Logout,
                     label = "Déconnexion",
@@ -93,6 +128,7 @@ fun HomeScreen(
                         }
                     }
                 )
+
             }
         }
     ) {
@@ -131,9 +167,13 @@ fun HomeScreen(
                     onRefresh = {
                         isRefreshing = true
                         scope.launch {
+                            getLastLocation(context) { lat, lon ->
+                                meteoViewModel.loadWeather(lat, lon)
+                            }
                             classementViewModel.fetchClassement(1)
                             calendrierViewModel.fetchCalendrier(1)
                             competitionViewModel.fetchCompetitions()
+
                             delay(1000)
                             isRefreshing = false
                         }
@@ -158,6 +198,8 @@ fun HomeScreen(
         }
     }
 }
+
+
 @Composable
 fun DrawerItem(icon: ImageVector, label: String, onClick: () -> Unit = {}) {
     Row(

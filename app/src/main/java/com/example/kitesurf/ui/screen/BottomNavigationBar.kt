@@ -1,21 +1,19 @@
 package com.example.kitesurf.ui.screen
 
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.EmojiEvents
 import androidx.compose.material.icons.filled.Event
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Thermostat
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import com.example.kitesurf.ui.theme.BlueOceanDark
 import com.example.kitesurf.ui.theme.BlueOceanLight
 
@@ -38,17 +36,29 @@ fun BottomNavigationBar(
         contentColor = Color.Black
     ) {
         tabs.forEachIndexed { index, (title, icon) ->
+            val selected = selectedTabIndex == index
+
             NavigationBarItem(
-                selected = selectedTabIndex == index,
+                selected = selected,
                 onClick = { onTabSelected(index) },
-                label = { Text(title) },
                 icon = {
                     Icon(
                         imageVector = icon,
                         contentDescription = title,
-                        tint = if (selectedTabIndex == index) BlueOceanDark else Color.Gray
+                        modifier = Modifier.size(if (selected) 35.dp else 24.dp),
+                        tint = if (selected) BlueOceanDark else Color.Gray
                     )
-                }
+                },
+                label = {
+                    if (selected) {
+                        Text(
+                            text = title,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                },
+                alwaysShowLabel = false
             )
         }
     }

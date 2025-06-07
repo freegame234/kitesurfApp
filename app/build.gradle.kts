@@ -111,6 +111,5 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
 
     implementation(libs.datastore.preferences)
-
-
+    implementation(libs.compose.foundation)
 }

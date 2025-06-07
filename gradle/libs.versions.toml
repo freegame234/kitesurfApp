@@ -44,9 +44,11 @@ roomRuntime = "2.7.1"  # Version correcte pour Room Runtime
 squareupConverterGson = "2.11.0"
 ui = "1.8.2"
 datastore = "1.0.0"
+compose-foundation = "1.5.0"
 
 
 [libraries]
+compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "compose-foundation" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 accompanist-swiperefresh = { module = "com.google.accompanist:accompanist-swiperefresh", version.ref = "accompanistSwiperefresh" }
 androidx-compose-bom-v20240401 = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
