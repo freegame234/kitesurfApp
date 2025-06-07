@@ -2,6 +2,7 @@ package com.example.kitesurf
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -38,7 +39,8 @@ class MainActivity : ComponentActivity() {
 
         checkAndRequestLocationPermission()
 
-        // 🔍 Vérifie si l'utilisateur est connecté
+        val cameFromNotification = intent.getStringExtra("navigate_to") == "competition"
+
         lifecycleScope.launch {
             val userId = getUserId(applicationContext)
             val startDestination = if (userId != null) "home_screen" else "login_screen"
@@ -54,6 +56,20 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        if (!cameFromNotification) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    == PackageManager.PERMISSION_GRANTED
+                ) {
+                    NotificationHelper.sendNotification(this, "Nouvelle compétition", "Une compétition est disponible !")
+                } else {
+                    requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 1)
+                }
+            } else {
+                NotificationHelper.sendNotification(this, "Nouvelle compétition", "Une compétition est disponible !")
+            }
+        }
     }
 
     private fun checkAndRequestLocationPermission() {
@@ -62,4 +78,17 @@ class MainActivity : ComponentActivity() {
             locationPermissionLauncher.launch(permission)
         }
     }
+
+    @Deprecated("Deprecated in Java")
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1 && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            NotificationHelper.sendNotification(this, "Nouvelle compétition", "Une compétition est disponible !")
+        }
+    }
+
 }

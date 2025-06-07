@@ -1,5 +1,6 @@
 package com.example.kitesurf.ui.screen
 
+import android.app.Activity
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -48,6 +49,15 @@ fun HomeScreen(
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+    val activity = LocalContext.current as? Activity
+    val navigateTo = activity?.intent?.getStringExtra("navigate_to")
+    LaunchedEffect(navigateTo) {
+        if (navigateTo == "competition") {
+            selectedTabIndex = 0 // index de l’onglet "Compétition"
+        }
+    }
+
+
     LaunchedEffect(Unit) {
         while (true) {
             getLastLocation(context) { lat, lon ->
