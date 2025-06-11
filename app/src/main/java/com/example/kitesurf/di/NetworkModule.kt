@@ -14,7 +14,7 @@ import javax.inject.Singleton
 object NetworkModule {
 
     @Provides
-    fun provideBaseUrl(): String = "http://192.168.1.141:5000"
+    fun provideBaseUrl(): String = "http://172.20.10.5:5000"
 
     @Provides
     @Singleton
